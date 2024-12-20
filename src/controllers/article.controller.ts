@@ -49,6 +49,49 @@ export const getArticle = Async(async (req, res, next) => {
   res.status(200).json(article);
 });
 
+export const searchArticles = Async(async (req, res, next) => {
+  const { search, category } = req.query;
+
+  const articles = await Article.aggregate([
+    {
+      $lookup: {
+        as: "category",
+        from: "categories",
+        foreignField: "_id",
+        localField: "category",
+      },
+    },
+    { $unwind: "$category" },
+    {
+      $match: {
+        $or: [
+          { title: { $regex: search, $options: "i" } },
+          { category: category || "" },
+        ],
+      },
+    },
+    {
+      $lookup: {
+        as: "topic",
+        from: "topics",
+        foreignField: "_id",
+        localField: "topic",
+      },
+    },
+    { $unwind: "$topic" },
+    {
+      $project: {
+        title: 1,
+        slug: 1,
+        category: "$category",
+        topic: "$topic",
+      },
+    },
+  ]);
+
+  res.status(200).json(articles);
+});
+
 export const getAllArticles = Async(async (req, res, next) => {
   const articles = await Article.find()
     .populate({ path: "category" })

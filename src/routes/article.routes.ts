@@ -8,7 +8,7 @@ Router.route("/")
   .post(checkAuth, articleController.createArticle)
   .get(articleController.getAllArticles);
 
-Router.route("/related/:slug").get(articleController.getRelatedArticles);
+Router.route("/search").get(articleController.searchArticles);
 
 Router.route("/tree").get(articleController.getTree);
 
@@ -16,5 +16,7 @@ Router.route("/:slug")
   .put(checkAuth, articleController.updateArticle)
   .delete(checkAuth, articleController.deleteArticle)
   .get(articleController.getArticle);
+
+Router.route("/related/:slug").get(articleController.getRelatedArticles);
 
 export default Router;

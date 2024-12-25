@@ -14,6 +14,7 @@ import errorController from "./controllers/errorController";
 import articleRoutes from "./routes/article.routes";
 import categoryRoutes from "./routes/category.routes";
 import authRoutes from "./routes/auth.routes";
+import checkHealthRoutes from "./routes/checkHealth.routes";
 
 const App = express();
 
@@ -34,6 +35,7 @@ App.use(mongoSanitize());
 
 NODE_MODE === "DEV" && App.use(morgan("dev"));
 
+App.use("/api/v1/health", checkHealthRoutes);
 App.use("/api/v1/auth", authRoutes);
 App.use("/api/v1/articles", articleRoutes);
 App.use("/api/v1/categories", categoryRoutes);
